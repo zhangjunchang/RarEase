@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RarEase 产品原型</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --panel-soft: #fafbfc;
+      --text: #1f2937;
+      --muted: #687385;
+      --line: #dde3ea;
+      --blue: #2563eb;
+      --blue-soft: #e9f0ff;
+      --green: #168a45;
+      --red: #dc2626;
+      --shadow: 0 18px 50px rgba(18, 31, 53, 0.12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .prototype-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 164px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background: var(--blue);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      overflow-x: auto;
+    }
+
+    .tabs button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 7px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .tabs button[aria-selected="true"] {
+      background: white;
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+    }
+
+    main {
+      display: grid;
+      place-items: center;
+      padding: 34px 20px;
+    }
+
+    .window {
+      width: min(1040px, 100%);
+      min-height: 660px;
+      border: 1px solid #cfd7e2;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .titlebar {
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+
+    .title-left,
+    .title-actions,
+    .summary-grid,
+    .row,
+    .destination-row,
+    .footer-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .title-left {
+      gap: 10px;
+      font-weight: 650;
+    }
+
+    .title-actions {
+      gap: 6px;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--line);
+      background: white;
+      color: var(--text);
+    }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .empty-content {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      min-height: 612px;
+    }
+
+    .dropzone {
+      margin: 46px auto 26px;
+      width: min(640px, calc(100% - 40px));
+      min-height: 250px;
+      border: 1.5px dashed #b8c4d3;
+      border-radius: 8px;
+      background: #fbfcff;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 32px;
+    }
+
+    .archive-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      font-size: 31px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .dropzone h1 {
+      font-size: 22px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .dropzone p,
+    .section-title span,
+    .meta,
+    .muted {
+      color: var(--muted);
+    }
+
+    .drop-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 22px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
+    .btn.danger {
+      border-color: #f3b4b4;
+      background: #fff5f5;
+      color: var(--red);
+    }
+
+    .recent {
+      border-top: 1px solid var(--line);
+      padding: 18px 22px;
+      background: var(--panel-soft);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-weight: 650;
+    }
+
+    .recent-list,
+    .file-list {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      overflow: hidden;
+    }
+
+    .recent-item,
+    .file-row {
+      display: grid;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      min-height: 42px;
+      padding: 0 12px;
+      font-size: 14px;
+    }
+
+    .recent-item {
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+
+    .recent-item:last-child,
+    .file-row:last-child {
+      border-bottom: 0;
+    }
+
+    .summary {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+
+    .summary-grid {
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .pill {
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .workspace {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      padding: 16px;
+      background: #fbfcfd;
+    }
+
+    .tree-item {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 9px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .tree-item.active {
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .main-pane {
+      min-width: 0;
+      padding: 16px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search {
+      width: min(280px, 100%);
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+      color: var(--muted);
+      background: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .file-list {
+      min-height: 0;
+    }
+
+    .file-head,
+    .file-row {
+      grid-template-columns: minmax(160px, 1fr) 92px 120px 92px;
+      gap: 12px;
+    }
+
+    .file-head {
+      display: grid;
+      align-items: center;
+      min-height: 36px;
+      padding: 0 12px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .name-cell {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .destination {
+      padding: 14px 22px;
+      border-top: 1px solid var(--line);
+      background: #fbfcfd;
+    }
+
+    .destination-row {
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .path-box {
+      min-width: min(480px, 100%);
+      flex: 1;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: white;
+      padding: 8px 10px;
+      color: var(--muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .footer-actions {
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .progress-screen,
+    .done-screen,
+    .error-screen {
+      min-height: 612px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .status-panel {
+      width: min(560px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+      padding: 28px;
+    }
+
+    .status-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .status-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      font-size: 22px;
+    }
+
+    .status-icon.progress {
+      color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .status-icon.done {
+      color: var(--green);
+      background: #e8f7ee;
+    }
+
+    .status-icon.error {
+      color: var(--red);
+      background: #fff1f1;
+    }
+
+    .bar {
+      height: 10px;
+      border-radius: 999px;
+      background: #e8edf3;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 62%;
+      background: var(--blue);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 18px 0 24px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--panel-soft);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .dialog-field {
+      margin: 18px 0;
+    }
+
+    .dialog-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+      font-size: 14px;
+    }
+
+    .checkline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .prototype-bar {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 12px;
+      }
+
+      main {
+        padding: 14px;
+      }
+
+      .window {
+        min-height: 720px;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .file-head,
+      .file-row {
+        grid-template-columns: minmax(120px, 1fr) 74px 82px;
+      }
+
+      .file-head span:nth-child(4),
+      .file-row span:nth-child(4) {
+        display: none;
+      }
+
+      .toolbar,
+      .destination-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .footer-actions {
+        width: 100%;
+      }
+
+      .btn {
+        flex: 1;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <header class="prototype-bar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">R</div>
+        <span>RarEase / 开匣</span>
+      </div>
+      <nav class="tabs" aria-label="原型页面">
+        <button type="button" aria-selected="true" data-screen="empty">初始</button>
+        <button type="button" aria-selected="false" data-screen="preview">预览</button>
+        <button type="button" aria-selected="false" data-screen="progress">解压中</button>
+        <button type="button" aria-selected="false" data-screen="done">完成</button>
+        <button type="button" aria-selected="false" data-screen="password">密码</button>
+        <button type="button" aria-selected="false" data-screen="error">异常</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="window" aria-label="RarEase 应用窗口">
+        <div class="titlebar">
+          <div class="title-left">
+            <span aria-hidden="true">▣</span>
+            <span id="window-title">RarEase</span>
+          </div>
+          <div class="title-actions">
+            <button class="icon-btn" title="设置" aria-label="设置">⚙</button>
+            <button class="icon-btn" title="关于" aria-label="关于">?</button>
+          </div>
+        </div>
+
+        <div id="screen-empty" class="content empty-content">
+          <div class="dropzone">
+            <div>
+              <div class="archive-icon" aria-hidden="true">▤</div>
+              <h1>拖入 RAR 文件，或点击选择文件</h1>
+              <p>支持 .rar、.part1.rar、.r00 分卷压缩包</p>
+              <div class="drop-actions">
+                <button class="btn primary" type="button">选择文件</button>
+                <button class="btn" type="button">选择文件夹</button>
+              </div>
+            </div>
+          </div>
+          <div class="recent">
+            <div class="section-title">
+              <strong>最近打开</strong>
+              <span>本机记录</span>
+            </div>
+            <div class="recent-list">
+              <div class="recent-item"><span>photos.part1.rar</span><span class="muted">昨天</span></div>
+              <div class="recent-item"><span>design-assets.rar</span><span class="muted">6月20日</span></div>
+              <div class="recent-item"><span>invoice-archive.rar</span><span class="muted">6月18日</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-preview" class="content hidden">
+          <div class="summary">
+            <h2>photos.part1.rar</h2>
+            <div class="summary-grid">
+              <span class="pill">238 个文件</span>
+              <span class="pill">1.8 GB</span>
+              <span class="pill">分卷：是</span>
+              <span class="pill">加密：否</span>
+              <span class="pill">RAR5</span>
+            </div>
+          </div>
+          <div class="workspace">
+            <aside class="sidebar" aria-label="目录">
+              <div class="tree-item active">▾ photos</div>
+              <div class="tree-item">  2025</div>
+              <div class="tree-item">  docs</div>
+              <div class="tree-item">  raw</div>
+            </aside>
+            <section class="main-pane">
+              <div class="toolbar">
+                <div class="search">⌕ 搜索压缩包内文件</div>
+                <button class="btn" type="button">更换文件</button>
+              </div>
+              <div class="file-list" aria-label="文件列表">
+                <div class="file-head">
+                  <span>名称</span><span>大小</span><span>修改时间</span><span>状态</span>
+                </div>
+                <div class="file-row">
+                  <span class="name-cell">□ photos/2025/001.jpg</span><span>4.2 MB</span><span>2025-12-12</span><span>正常</span>
+                </div>
+                <div class="file-row">
+                  <span class="name-cell">□ photos/2025/002.jpg</span><span>3.8 MB</span><span>2025-12-12</span><span>正常</span>
+                </div>
+                <div class="file-row">
+                  <span class="name-cell">□ docs/readme.txt</span><span>12 KB</span><span>2025-12-10</span><span>正常</span>
+                </div>
+                <div class="file-row">
+                  <span class="name-cell">□ raw/session-01.mov</span><span>802 MB</span><span>2025-12-08</span><span>正常</span>
+                </div>
+                <div class="file-row">
+                  <span class="name-cell">□ raw/session-02.mov</span><span>746 MB</span><span>2025-12-08</span><span>正常</span>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div class="destination">
+            <div class="destination-row">
+              <div class="path-box">解压到：/Users/you/Downloads/photos</div>
+              <div class="footer-actions">
+                <button class="btn" type="button">选择目录</button>
+                <button class="btn primary" type="button">解压全部</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-progress" class="progress-screen hidden">
+          <div class="status-panel">
+            <div class="status-head">
+              <div class="status-icon progress" aria-hidden="true">↓</div>
+              <div>
+                <h2>正在解压 photos.part1.rar</h2>
+                <p class="muted">photos/2025/001.jpg</p>
+              </div>
+            </div>
+            <div class="bar" aria-label="解压进度"><span></span></div>
+            <div class="stats">
+              <div class="stat"><strong>62%</strong><span class="muted">当前进度</span></div>
+              <div class="stat"><strong>142 / 238</strong><span class="muted">文件数量</span></div>
+              <div class="stat"><strong>38 秒</strong><span class="muted">预计剩余</span></div>
+            </div>
+            <div class="destination-row">
+              <span class="muted">速度 48 MB/s</span>
+              <button class="btn danger" type="button">取消</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-done" class="done-screen hidden">
+          <div class="status-panel">
+            <div class="status-head">
+              <div class="status-icon done" aria-hidden="true">✓</div>
+              <div>
+                <h2>解压完成</h2>
+                <p class="muted">238 个文件已解压到 /Users/you/Downloads/photos</p>
+              </div>
+            </div>
+            <div class="footer-actions">
+              <button class="btn" type="button">再解压一个</button>
+              <button class="btn primary" type="button">打开文件夹</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-password" class="error-screen hidden">
+          <div class="status-panel">
+            <div class="status-head">
+              <div class="status-icon progress" aria-hidden="true">●</div>
+              <div>
+                <h2>这个压缩包需要密码</h2>
+                <p class="muted">密码只保留在本次任务中。</p>
+              </div>
+            </div>
+            <div class="dialog-field">
+              <label for="password">密码</label>
+              <input class="input" id="password" type="password" value="rarease-demo" />
+            </div>
+            <label class="checkline"><input type="checkbox" /> 显示密码</label>
+            <div class="footer-actions" style="margin-top: 24px;">
+              <button class="btn" type="button">取消</button>
+              <button class="btn primary" type="button">继续</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="screen-error" class="error-screen hidden">
+          <div class="status-panel">
+            <div class="status-head">
+              <div class="status-icon error" aria-hidden="true">!</div>
+              <div>
+                <h2>缺少分卷文件</h2>
+                <p class="muted">未找到 photos.part3.rar，请把所有分卷放在同一个文件夹后重试。</p>
+              </div>
+            </div>
+            <div class="footer-actions">
+              <button class="btn" type="button">更换文件</button>
+              <button class="btn primary" type="button">重试</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const titles = {
+      empty: "RarEase",
+      preview: "photos.part1.rar",
+      progress: "正在解压 photos.part1.rar",
+      done: "解压完成",
+      password: "需要密码",
+      error: "缺少分卷文件"
+    };
+
+    const tabs = Array.from(document.querySelectorAll("[data-screen]"));
+    const screens = Array.from(document.querySelectorAll("[id^='screen-']"));
+    const title = document.getElementById("window-title");
+
+    function showScreen(name) {
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab.dataset.screen === name));
+      });
+      screens.forEach((screen) => {
+        screen.classList.toggle("hidden", screen.id !== `screen-${name}`);
+      });
+      title.textContent = titles[name] || "RarEase";
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => showScreen(tab.dataset.screen));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+node_modules
+.npm-cache
+.cargo-home
+.cargo-home-sparse
+dist
+target
+src-tauri/target
+.DS_Store
+*.log
