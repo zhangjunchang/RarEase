@@ -4,6 +4,20 @@ RarEase is a lightweight desktop RAR extractor built with Tauri, Rust, React, an
 
 开匣是一款面向 Windows 和 macOS 的轻量级 RAR 解压工具。项目目标是提供一个干净、快速、低打扰的桌面体验：打开 RAR 文件，预览内容，选择位置，一键解压。
 
+## Download
+
+Stable downloads are published on the GitHub Releases page.
+
+| Platform | Download |
+| --- | --- |
+| Windows | [Download for Windows](https://github.com/zhangjunchang/RarEase/releases/latest) |
+| macOS | [Download for macOS](https://github.com/zhangjunchang/RarEase/releases/latest) |
+
+If there is no release yet, build artifacts can be generated from the Actions tab:
+
+- `Build Windows` creates Windows installer artifacts.
+- `Build macOS` creates a macOS app artifact.
+
 > Current status: early prototype. The desktop shell, main UI, archive preview flow, progress flow, and packaging skeleton are in place. Real RAR parsing and extraction are still on the roadmap.
 
 ## Features
@@ -15,7 +29,7 @@ RarEase is a lightweight desktop RAR extractor built with Tauri, Rust, React, an
 - Password and error-state UI prototypes
 - Tauri desktop shell for macOS and Windows
 - macOS `.app` build verified
-- GitHub Actions workflow for Windows builds
+- GitHub Actions workflows for Windows and macOS builds
 
 ## Screens
 
@@ -134,10 +148,11 @@ src-tauri/target/release/bundle/msi/
 src-tauri/target/release/bundle/nsis/
 ```
 
-A Windows build workflow is included at:
+Windows and macOS build workflows are included at:
 
 ```text
 .github/workflows/build-windows.yml
+.github/workflows/build-macos.yml
 ```
 
 ## Project Structure
